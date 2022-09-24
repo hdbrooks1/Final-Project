@@ -1,0 +1,63 @@
+import json, requests
+
+print("Welcome to weather program made by Hunter Brooks")
+
+base_url = "https://api.openweathermap.org/data/2.5/weather"
+
+apikey = "366a5432e9b6656a17ef9c9ff1433891"
+
+#Check api connection test
+#Probably needs replaced with try blocks
+response = ""
+i = 0
+while i < 4:
+    city = "Chicago"
+    zipcode = "60007"
+    response = requests.get(
+        f"{base_url}?q={city},{zipcode}&units=imperial&APPID={apikey}")
+
+    if (response.status_code == 200):
+        print()
+        print("connection was a success")
+        break
+    elif (response.status_code == 400):
+        print("Connection failed, trying again")
+
+    if i == 3:
+        print("Final attempt to connect!")
+        print()
+        print("If this fails please restart program.")
+
+    i += 1
+
+#Enter city or zipcode? can it be both?
+again = ""
+while again != "stop":
+    print()
+
+    #Validate the data here?
+    city = input("Please enter your city: ")
+    zipcode = input("Please enter your zipcode: ")
+
+    url = f"{base_url}?q={city},{zipcode}&units=imperial&APPID={apikey}"
+
+    #Print the connection url
+    #print(url)
+    print()
+
+    response = requests.get(url)
+    unformated_data = response.json()
+
+    #print(unformated_data)
+
+    temp = unformated_data["main"]["temp"]
+    print(f"The current temp is: {temp}")
+
+    temp_max = unformated_data["main"]["temp_max"]
+    print(f"The max temp is: {temp_max}")
+
+    print()
+
+    again = input("Type stop to end progam or hit enter to continue: ")
+
+print("Stopping Program")
